@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	
+	<flow name="salesforce-expFlow" doc:id="d8079724-2102-490e-a402-fb45416d9edb" >
+		<http:listener doc:name="Listener" doc:id="100cd299-93bc-4582-b388-1a74fa1f36fb" config-ref="HTTP_Listener_config" path="/salesforce"/>
+		<flow-ref doc:name="Refer to cf-correlation-id" doc:id="f7c93f7d-4af0-4c8b-a4f5-c94afad6783f" name="cf-correlation-id" />
+		<logger level="INFO" doc:name="LOG INFO Start Process" doc:id="f52a7988-65ac-43ed-837c-bb7c67c74afe" message="Starting experience Layer With CorrelationId #[vars.correlationid]"/>
+		<ee:transform doc:name="Dw Input" doc:id="eb994516-ab38-4ee6-afc5-a85cffb549ba" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="vInputPayload" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<http:request method="POST" doc:name="HTTP Request To Process API" doc:id="04baf92f-8539-4613-8ce9-0ea209abd90f" config-ref="HTTP_Request_configuration" path="/process">
+			<http:headers ><![CDATA[#[output application/java
+---
+{
+	"" : "",
+	"xh-operation" : "insert"
+}]]]></http:headers>
+		</http:request>
+		<ee:transform doc:name="DW Output" doc:id="f6af028d-3bef-466f-8b72-d097e22ee9c7" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="vResultSet" ><![CDATA[%dw 2.0
+output application/java
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		
+</ee:transform>
+		<logger level="INFO" doc:name="LOG INFO Finish Process" doc:id="ed152c4e-7226-4880-98a8-51e3477621d3" message="Finishing Experience Layer With CorrelationId  #[vars.correlationid]"/>
+	
+	</flow>
+</mule>

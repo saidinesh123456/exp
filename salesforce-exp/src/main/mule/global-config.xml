@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<global-property doc:name="Global Property" doc:id="309623a1-7005-4a4b-b2e2-401f0d2ad153" name="http.exp.port" value="8091" />
+	<configuration-properties doc:name="Configuration properties" doc:id="f0739f7e-3747-4170-8270-edfff842e5c4" file="properties.yaml" />
+</mule>
